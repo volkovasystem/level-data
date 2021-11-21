@@ -4,12 +4,12 @@
 	@license:module:
 		MIT License
 
-		Copyright (c) 2020-present Richeve S. Bebedor <richeve.bebedor@gmail.com>
+		Copyright (c) 2021-present Richeve S. Bebedor <richeve.bebedor@gmail.com>
 
 		@license:copyright:
 			Richeve S. Bebedor
 
-			<@license:year-range:2020-present;>
+			<@license:year-range:2021-present;>
 
 			<@license:contact-detail:richeve.bebedor@gmail.com;>
 		@license:copyright;
@@ -160,7 +160,7 @@ const levelData = (
 
 		for(
 			let index = propertyList.length;
-			index > -1;
+			index >= -1;
 			index--
 		){
 			(
@@ -294,7 +294,25 @@ const levelData = (
 						)
 				);
 			}
-			else{
+			else if(
+					(
+							typeof
+							currentProperty
+						==	"string"
+					)
+				&&
+					(
+							currentProperty
+							.length
+						>	0
+					)
+				&&
+					(
+							typeof
+							value
+						!=	"undefined"
+					)
+			){
 				(
 						resultData
 						.$result[ currentProperty ]
