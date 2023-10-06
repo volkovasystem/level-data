@@ -1,15 +1,15 @@
 "use strict";
 
-/*;
+/*;!
 	@license:module:
 		MIT License
 
-		Copyright (c) 2021-present Richeve S. Bebedor <richeve.bebedor@gmail.com>
+		Copyright (c) 2023-present Richeve S. Bebedor <richeve.bebedor@gmail.com>
 
 		@license:copyright:
 			Richeve S. Bebedor
 
-			<@license:year-range:2021-present;>
+			<@license:year-range:2023-present;>
 
 			<@license:contact-detail:richeve.bebedor@gmail.com;>
 		@license:copyright;
@@ -34,19 +34,68 @@
 	@license:module;
 */
 
+const OBJECT_TYPE = (
+		(
+			global
+			.OBJECT_TYPE
+		)
+	||
+		(
+			"object"
+		)
+);
+
+const STRING_TYPE = (
+		(
+			global
+			.STRING_TYPE
+		)
+	||
+		(
+			"string"
+		)
+);
+
+const UNDEFINED_TYPE = (
+		(
+			global
+			.UNDEFINED_TYPE
+		)
+	||
+		(
+			"undefined"
+		)
+);
+
+const DOT_SEPARATOR = (
+	"."
+);
+
+const CONSTRUCTOR_FIELD = (
+	"constructor"
+);
+
+const NATIVE_CODE_PATTERN = (
+	/\[native\scode\]/
+);
+
+const OBJECT_CLASS_PATTERN = (
+	/Object\(\)/
+);
+
 const levelData = (
-	function levelData( object ){
+	function levelData( data, option ){
 		/*;
 			@definition:
 				@procedure: #levelData
 					@description:
-						Flatten object.
+						Flatten data.
 
 						This uses single level loop flow procedure.
 					@description;
 				@procedure;
 
-				@parameter: #object
+				@parameter: #data
 					@type:
 							object
 					@type;
@@ -57,7 +106,16 @@ const levelData = (
 					@required;
 				@parameter;
 
-				@result:#result
+				@parameter: #option
+					@type:
+							object
+					@type;
+
+					@description:
+					@description;
+				@parameter;
+
+				@result: #result
 					@type:
 							object
 					@type;
@@ -80,12 +138,12 @@ const levelData = (
 		if(
 				(
 						typeof
-						object
-					!=	"object"
+						data
+					!=	OBJECT_TYPE
 				)
 			||
 				(
-						object
+						data
 					===	null
 				)
 			||
@@ -93,7 +151,7 @@ const levelData = (
 						Object
 						.keys(
 							(
-								object
+								data
 							)
 						)
 						.length
@@ -105,52 +163,67 @@ const levelData = (
 					);
 		}
 
-		const resultData = (
-			{
-				$result: (
-					{ }
+		(
+				option
+			=	(
+						(
+							option
+						)
+					||
+						(
+							{ }
+						)
 				)
-			}
 		);
 
-		const objectStack = (
+		const leanStatus = (
+				option
+				.leanStatus
+			===	true
+		);
+
+		const resultData = (
+			{ }
+		);
+
+		const dataStack = (
 			[ ]
 		);
 
-		const propertyListStack = (
+		const fieldListStack = (
 			[ ]
 		);
 
-		const parentPropertyStack = (
+		const parentFieldStack = (
 			[ ]
 		);
 
-		let propertyList = (
+		let fieldList = (
 			Object
 			.keys(
 				(
-					object
+					data
 				)
 			)
 		);
 
-		let parentObject = (
-			object
+		let parentData = (
+			data
 		);
 
-		let currentObject = (
-			object
+		let currentData = (
+			data
 		);
 
-		let parentProperty = (
+		let parentField = (
 			undefined
 		);
 
-		let currentProperty = (
+		let currentField = (
 			undefined
 		);
 
-		let property = (
+		let field = (
 			undefined
 		);
 
@@ -159,14 +232,14 @@ const levelData = (
 		);
 
 		for(
-			let index = propertyList.length;
+			let index = fieldList.length;
 			index >= -1;
 			index--
 		){
 			(
-					property
+					field
 				=	(
-						propertyList
+						fieldList
 						.pop( )
 					)
 			);
@@ -174,15 +247,33 @@ const levelData = (
 			(
 					value
 				=	(
-						currentObject[ property ]
+						currentData[ field ]
 					)
 			);
 
 			(
-					currentProperty
+					currentField
 				=	(
 						[
-							parentProperty,
+							(
+									(
+											(
+													Array
+													.isArray(
+														(
+															parentData
+														)
+													)
+												===	true
+											)
+									)
+								?	(
+										`${ parentField || "" }[${ field }]`
+									)
+								:	(
+										parentField
+									)
+							),
 
 							(
 									(
@@ -190,17 +281,17 @@ const levelData = (
 													Array
 													.isArray(
 														(
-															parentObject
+															parentData
 														)
 													)
 												===	true
 											)
 									)
 								?	(
-										`@Array:$${ property }`
+										undefined
 									)
 								:	(
-										property
+										field
 									)
 							)
 						]
@@ -211,76 +302,183 @@ const levelData = (
 						)
 						.join(
 							(
-								"."
+								DOT_SEPARATOR
 							)
 						)
 					)
 			);
 
+			let nativeObjectStatus = false;
+			let arrayObjectStatus = false;
+
 			if(
 					(
 							typeof
 							value
-						==	"object"
+						==	OBJECT_TYPE
 					)
 			){
-				objectStack
+				(
+						arrayObjectStatus
+					=	(
+								(
+										Array
+										.isArray(
+											(
+												value
+											)
+										)
+									===	true
+								)
+						)
+				);
+
+				if(
+						(
+								arrayObjectStatus
+							!==	true
+						)
+					&&
+						(
+								(
+										(
+												CONSTRUCTOR_FIELD
+											in	value
+										)
+									===	true
+								)
+							&&
+								(
+										(
+											NATIVE_CODE_PATTERN
+										)
+										.test(
+											(
+												value
+												.constructor
+												.toString( )
+											)
+										)
+									===	true
+								)
+							&&
+								(
+										(
+											OBJECT_CLASS_PATTERN
+										)
+										.test(
+											(
+												value
+												.constructor
+												.toString( )
+											)
+										)
+									===	true
+								)
+						)
+				){
+					(
+							value
+						=	(
+								Object
+								.assign(
+									(
+										{ }
+									),
+
+									(
+										value
+									)
+								)
+							)
+					);
+
+					(
+							nativeObjectStatus
+						=	(
+								true
+							)
+					);
+				}
+
+				(
+						(
+							!	(
+										(
+												leanStatus
+											=== true
+										)
+									&&
+										(
+												(
+														nativeObjectStatus
+													===	true
+												)
+											||
+												(
+														arrayObjectStatus
+													===	true
+												)
+										)
+								)
+						)
+				)	&&
+				(
+						resultData[ currentField ]
+					=	(
+							value
+						)
+				);
+
+				dataStack
 				.push(
 					(
-						parentObject
+						parentData
 					)
 				);
 
-				propertyListStack
+				fieldListStack
 				.push(
 					(
-						propertyList
+						fieldList
 					)
 				);
 
-				parentPropertyStack
+				parentFieldStack
 				.push(
 					(
-						parentProperty
+						parentField
 					)
 				);
 
 				(
-						resultData
-						.$result[ currentProperty ]
+						parentField
+					=	(
+							currentField
+						)
+				);
+
+				(
+						parentData
 					=	(
 							value
 						)
 				);
 
 				(
-						parentProperty
+						currentData
 					=	(
-							currentProperty
+							parentData
 						)
 				);
 
 				(
-						parentObject
-					=	(
-							value
-						)
-				);
-
-				(
-						currentObject
-					=	(
-							parentObject
-						)
-				);
-
-				(
-						propertyList
+						fieldList
 					=	(
 							Object
 							.keys(
 								(
-									parentObject
+									parentData
 								)
 							)
 						)
@@ -289,7 +487,7 @@ const levelData = (
 				(
 						index
 					=	(
-							propertyList
+							fieldList
 							.length
 						)
 				);
@@ -297,12 +495,12 @@ const levelData = (
 			else if(
 					(
 							typeof
-							currentProperty
-						==	"string"
+							currentField
+						==	STRING_TYPE
 					)
 				&&
 					(
-							currentProperty
+							currentField
 							.length
 						>	0
 					)
@@ -310,12 +508,11 @@ const levelData = (
 					(
 							typeof
 							value
-						!=	"undefined"
+						!=	UNDEFINED_TYPE
 					)
 			){
 				(
-						resultData
-						.$result[ currentProperty ]
+						resultData[ currentField ]
 					=	(
 							value
 						)
@@ -329,38 +526,38 @@ const levelData = (
 					)
 				&&
 					(
-							objectStack
+							dataStack
 							.length
 						>	0
 					)
 			){
 				(
-						parentObject
+						parentData
 					=	(
-							objectStack
+							dataStack
 							.pop( )
 						)
 				);
 
 				(
-						currentObject
+						currentData
 					=	(
-							parentObject
+							parentData
 						)
 				);
 
 				(
-						propertyList
+						fieldList
 					=	(
-							propertyListStack
+							fieldListStack
 							.pop( )
 						)
 				);
 
 				(
-						parentProperty
+						parentField
 					=	(
-							parentPropertyStack
+							parentFieldStack
 							.pop( )
 						)
 				);
@@ -368,7 +565,7 @@ const levelData = (
 				(
 						index
 					=	(
-							propertyList
+							fieldList
 							.length
 						)
 				);

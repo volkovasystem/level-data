@@ -1,6 +1,3 @@
-.editorconfig
+*
 
-definition.mjs
-
-*.module.js
-*.test.js
+!level-data.js
