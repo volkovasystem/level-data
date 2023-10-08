@@ -24,7 +24,8 @@
 	"keywords": [
 		"level-data",
 		"level",
-		"data"
+		"data",
+		"flatten"
 	],
 	"author": "Richeve S. Bebedor <richeve.bebedor@gmail.com>",
 	"contributors": [
