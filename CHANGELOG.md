@@ -1,8 +1,9 @@
 #	CHANGELOG
 
-##	UNRELEASED
-
 ##	2023-10-06/0.0.0
+
+###	UNRELEASED
+- undefined
 
 ###	ADDED
 - Finalized implementation for level data utility procedure.
