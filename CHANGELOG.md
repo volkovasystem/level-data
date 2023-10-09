@@ -1,5 +1,25 @@
 #	CHANGELOG
 
+##	2023-10-10/0.0.3
+
+###	UNRELEASED
+- undefined
+
+###	ADDED
+- undefined
+
+###	MODIFIED
+- Modified bundle flow structure to decouple from webpack.
+
+###	DEPRECATED
+- undefined
+
+###	REMOVED
+- undefined
+
+###	SECURITY
+- undefined
+
 ##	2023-10-09/0.0.2
 
 ###	UNRELEASED
