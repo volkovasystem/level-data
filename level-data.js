@@ -1,4 +1,4 @@
-!function webpackUniversalModuleDefinition(root,factory){"object"==typeof exports&&"object"==typeof module?module.exports=factory():"function"==typeof define&&define.amd?define("levelData",[],factory):"object"==typeof exports?exports.levelData=factory():root.levelData=factory()}(self,(()=>(()=>{"use strict";var __webpack_modules__={380:(module,__unused_webpack_exports,__webpack_require__)=>{
+!function webpackUniversalModuleDefinition(root,factory){"object"==typeof exports&&"object"==typeof module?module.exports=factory():"function"==typeof define&&define.amd?define("levelData",[],factory):"object"==typeof exports?exports.levelData=factory():root.levelData=factory()}(this,(()=>(()=>{"use strict";var __webpack_modules__={380:(module,__unused_webpack_exports,__webpack_require__)=>{
 /*;!
 	@license:module:
 		MIT License
