@@ -159,7 +159,7 @@ const levelData = (
 				)
 		){
 			return	(
-						undefined
+						data
 					);
 		}
 
