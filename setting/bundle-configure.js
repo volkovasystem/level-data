@@ -1,6 +1,5 @@
 "use strict";
 
-
 const BUNDLE_CONFIGURE = (
 	{
 		"entry": (
@@ -37,6 +36,10 @@ const BUNDLE_CONFIGURE = (
 							true
 						),
 					}
+				),
+
+				"globalObject": (
+					"this"
 				),
 			}
 		),
